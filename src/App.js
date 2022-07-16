@@ -1,11 +1,12 @@
 import "./App.css";
 import { io } from "socket.io-client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 function App() {
-  const socket = useRef(io("http://localhost:3001"));
+  const socket = useRef(null);
 
   useEffect(() => {
+    socket.current = io("http://localhost:3001");
     console.log(socket.current);
     socket.current.on("chat message", (msg) => {
       console.log(msg);
