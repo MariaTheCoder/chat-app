@@ -1,23 +1,27 @@
 import "./App.css";
 import { io } from "socket.io-client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function App() {
-  const [socket, setSocket] = useState(null);
+  const socket = useRef(io("http://localhost:3001"));
 
   useEffect(() => {
-    if (!socket) {
-      const newSocket = io("http://localhost:3001");
-      console.log(newSocket);
-      newSocket.emit("chat message", "Hello from React");
-      newSocket.on("chat message", (msg) => {
-        console.log(msg);
-      });
-      setSocket(newSocket);
-    }
-  }, [socket]);
+    socket.current.on("chat message", (msg) => {
+      console.log(msg);
+    });
+  }, []);
 
-  return <div className="App"></div>;
+  return (
+    <div className="App">
+      <button
+        onClick={() => {
+          if (socket) socket.current.emit("poke");
+        }}
+      >
+        Poke everybody!
+      </button>
+    </div>
+  );
 }
 
 export default App;
